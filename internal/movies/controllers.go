@@ -1,4 +1,4 @@
-package controllers
+package movies
 
 import (
 	models "blockbustermvc/internal/models/movie"

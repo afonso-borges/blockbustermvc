@@ -1,4 +1,4 @@
-package controllers
+package loans
 
 import (
 	models "blockbustermvc/internal/models/loans"
