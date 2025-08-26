@@ -9,3 +9,11 @@ type IMovieService interface {
 	UpdateMovie(id uuid.UUID, movie *MovieDTO) error
 	DeleteMovie(id uuid.UUID) error
 }
+
+type IMovieRepository interface {
+	CreateMovie(movie *CreateMovieDTO) error
+	GetMovie(id uuid.UUID) (*MovieDTO, error)
+	GetAllMovies() ([]*MovieDTO, error)
+	UpdateMovie(id uuid.UUID, movie *MovieDTO) error
+	DeleteMovie(id uuid.UUID) error
+}

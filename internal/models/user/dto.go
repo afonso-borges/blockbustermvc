@@ -27,8 +27,10 @@ func NewUserDTO(u *User) *UserDTO {
 }
 
 type CreateUserDTO struct {
-	UserName string `json:"user_name"`
-	Email    string `json:"email"`
+	UserName  string    `json:"user_name"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"update_at"`
 }
 
 func (u *CreateUserDTO) Validate() error {

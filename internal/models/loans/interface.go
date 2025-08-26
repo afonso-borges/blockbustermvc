@@ -3,9 +3,18 @@ package models
 import "github.com/google/uuid"
 
 type ILoanService interface {
-	CreateLoan(movieId, userId uuid.UUID) (*Loan, error)
+	CreateLoan(movieId, userId uuid.UUID) (*LoanDTO, error)
 	ReturnMovie(loanId uuid.UUID) error
-	GetLoan(id uuid.UUID) (*Loan, error)
-	GetUserLoans(userId uuid.UUID) ([]*Loan, error)
-	GetAllLoans() ([]*Loan, error)
+	GetLoan(id uuid.UUID) (*LoanDTO, error)
+	GetUserLoans(userId uuid.UUID) ([]*LoanDTO, error)
+	GetAllLoans() ([]*LoanDTO, error)
+}
+
+type ILoanRepository interface {
+	CreateLoan(loan *LoanDTO) error
+	UpdateLoan(loan *LoanDTO) error
+	ReturnMovie(loanId uuid.UUID) error
+	GetLoan(id uuid.UUID) (*LoanDTO, error)
+	GetActiveUserLoans(userId uuid.UUID) ([]*LoanDTO, error)
+	GetAllLoans() ([]*LoanDTO, error)
 }

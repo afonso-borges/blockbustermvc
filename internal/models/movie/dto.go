@@ -13,7 +13,9 @@ type MovieDTO struct {
 	Name      string    `json:"name"`
 	Director  string    `json:"director"`
 	Year      int64     `json:"year"`
+	Quantity  int64     `json:"quantity"`
 	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func NewMovieDTO(m *Movie) *MovieDTO {
@@ -27,10 +29,13 @@ func NewMovieDTO(m *Movie) *MovieDTO {
 }
 
 type CreateMovieDTO struct {
-	Name     string `json:"name"`
-	Director string `json:"director"`
-	Year     int64  `json:"year"`
-	CoverURL string `json:"cover_url"`
+	Name      string    `json:"name"`
+	Director  string    `json:"director"`
+	Year      int64     `json:"year"`
+	Quantity  int64     `json:"quantity"`
+	CoverURL  string    `json:"cover_url"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"update_at"`
 }
 
 func (m *CreateMovieDTO) Validate() error {
@@ -44,6 +49,10 @@ func (m *CreateMovieDTO) Validate() error {
 
 	if !validReleaseYear(m.Year) {
 		return errors.New("valid release year is required")
+	}
+
+	if m.Quantity <= 0 {
+		return errors.New("quantity must be bigger than zero")
 	}
 
 	return nil

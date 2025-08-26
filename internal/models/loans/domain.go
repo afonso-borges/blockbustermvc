@@ -14,7 +14,7 @@ type Loan struct {
 	ReturnedAt time.Time `json:"returned_at"`
 	Status     string    `json:"Status"`
 	CreatedAt  time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"Updated_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 func NewLoan(l *CreateLoanDTO) *Loan {
