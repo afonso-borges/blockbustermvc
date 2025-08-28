@@ -70,7 +70,6 @@ func (l LoanService) CreateLoan(movieId, userId uuid.UUID) (*models.LoanDTO, err
 		Director:  movie.Director,
 		Year:      movie.Year,
 		Quantity:  movie.Quantity,
-		CoverURL:  movie.CoverURL,
 		CreatedAt: movie.CreatedAt,
 		UpdatedAt: time.Now(),
 	}
@@ -112,7 +111,6 @@ func (l LoanService) ReturnMovie(loanId uuid.UUID) error {
 		Director:  movie.Director,
 		Year:      movie.Year,
 		Quantity:  movie.Quantity,
-		CoverURL:  movie.CoverURL,
 		CreatedAt: movie.CreatedAt,
 		UpdatedAt: time.Now(),
 	}

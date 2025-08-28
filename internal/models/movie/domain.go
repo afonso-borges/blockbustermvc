@@ -21,6 +21,5 @@ func NewMovie(m *CreateMovieDTO) *Movie {
 		Name:     m.Name,
 		Director: m.Director,
 		Year:     m.Year,
-		CoverURL: m.CoverURL,
 	}
 }

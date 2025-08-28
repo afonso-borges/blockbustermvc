@@ -12,7 +12,6 @@ type MovieDTO struct {
 	Director  string    `json:"director"`
 	Year      int64     `json:"year"`
 	Quantity  int64     `json:"quantity"`
-	CoverURL  string    `json:"cover_url"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -32,7 +31,6 @@ type CreateMovieDTO struct {
 	Director  string    `json:"director" binding:"required,mix=2,max=100"`
 	Year      int64     `json:"year" binding:"required,number"`
 	Quantity  int64     `json:"quantity" binding:"required,min=1,max=100"`
-	CoverURL  string    `json:"cover_url,omitempty"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"update_at"`
 }
@@ -42,7 +40,6 @@ type UpdateMovieDTO struct {
 	Director  string    `json:"director" binding:"required,mix=2,max=100"`
 	Year      int64     `json:"year" binding:"required,number"`
 	Quantity  int64     `json:"quantity" binding:"required,min=1,max=100"`
-	CoverURL  string    `json:"cover_url"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

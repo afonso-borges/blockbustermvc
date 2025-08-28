@@ -22,15 +22,14 @@ func NewMovieRepository(db *pgxpool.Pool) models.IMovieRepository {
 
 func (r *MovieRepository) CreateMovie(movie *models.CreateMovieDTO) error {
 	query := `
-		INSERT INTO movies (name, director, year, cover_url, quantity, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, $6, $7)`
+		INSERT INTO movies (name, director, year, quantity, created_at, updated_at)
+		VALUES ($1, $2, $3, $4, $5, $6)`
 
 	now := time.Now()
 	_, err := r.DB.Exec(context.Background(), query,
 		movie.Name,
 		movie.Director,
 		movie.Year,
-		movie.CoverURL,
 		movie.Quantity,
 		now,
 		now,
