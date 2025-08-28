@@ -3,7 +3,7 @@ package models
 import "github.com/google/uuid"
 
 type ILoanService interface {
-	CreateLoan(movieId, userId uuid.UUID) (*LoanDTO, error)
+	CreateLoan(movieId, userId uuid.UUID) (*CreateLoanDTO, error)
 	ReturnMovie(loanId uuid.UUID) error
 	GetLoan(id uuid.UUID) (*LoanDTO, error)
 	GetUserLoans(userId uuid.UUID) ([]*LoanDTO, error)
@@ -11,7 +11,7 @@ type ILoanService interface {
 }
 
 type ILoanRepository interface {
-	CreateLoan(loan *LoanDTO) error
+	CreateLoan(loan *CreateLoanDTO) error
 	UpdateLoan(loan *LoanDTO) error
 	ReturnMovie(loanId uuid.UUID) error
 	GetLoan(id uuid.UUID) (*LoanDTO, error)

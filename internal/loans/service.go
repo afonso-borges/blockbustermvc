@@ -28,7 +28,7 @@ func NewLoanService(
 	}
 }
 
-func (l LoanService) CreateLoan(movieId, userId uuid.UUID) (*models.LoanDTO, error) {
+func (l LoanService) CreateLoan(movieId, userId uuid.UUID) (*models.CreateLoanDTO, error) {
 	movie, err := l.movieService.GetMovie(movieId)
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func (l LoanService) CreateLoan(movieId, userId uuid.UUID) (*models.LoanDTO, err
 		return nil, errors.New("user has active loans")
 	}
 
-	loan := &models.LoanDTO{
+	loan := &models.CreateLoanDTO{
 		MovieID:    movieId,
 		UserID:     userId,
 		BorrowedAt: time.Now(),

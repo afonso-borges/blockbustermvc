@@ -23,21 +23,21 @@ func (lc *LoansController) RegisterRoutes(r *gin.Engine) {
 
 	{
 		loans.POST("", lc.CreateLoan)
-		loans.POST("/:id/return", lc.ReturnMovie)
+		loans.PUT("/:id/return", lc.ReturnMovie)
 		loans.GET("/:id", lc.GetLoan)
 		loans.GET("", lc.GetAllLoans)
 	}
 
 	users := r.Group("/loans/users")
 	{
-		users.GET("/:userdId/loans", lc.GetUserLoans)
+		users.GET("/:userId", lc.GetUserLoans)
 	}
 }
 
 func (lc *LoansController) CreateLoan(ctx *gin.Context) {
 	var req struct {
-		MovieId uuid.UUID `json:"movie_id"`
-		UserId  uuid.UUID `json:"user_id"`
+		MovieId string `json:"movie_id"`
+		UserId  string `json:"user_id"`
 	}
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -47,7 +47,23 @@ func (lc *LoansController) CreateLoan(ctx *gin.Context) {
 		return
 	}
 
-	loan, err := lc.loanService.CreateLoan(req.MovieId, req.UserId)
+	movieId, err := uuid.Parse(req.MovieId)
+	if err != nil {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	userId, err := uuid.Parse(req.UserId)
+	if err != nil {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	loan, err := lc.loanService.CreateLoan(movieId, userId)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -100,12 +116,12 @@ func (lc *LoansController) GetAllLoans(ctx *gin.Context) {
 func (lc *LoansController) GetUserLoans(ctx *gin.Context) {
 	if err := uuid.Validate(ctx.Param("userId")); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid user ID",
+			"error": "Invalid user ID(dbug)",
 		})
 		return
 	}
 
-	id, err := uuid.Parse(ctx.Param("id"))
+	id, err := uuid.Parse(ctx.Param("userId"))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),

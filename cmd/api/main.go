@@ -5,13 +5,17 @@ import (
 	loansModule "blockbustermvc/internal/loans"
 	moviesModule "blockbustermvc/internal/movies"
 	usersModule "blockbustermvc/internal/users"
+	"encoding/gob"
 	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func main() {
+	gob.Register(uuid.UUID{})
+
 	// Initialize database configuration
 	dbConfig := database.NewConfig()
 
