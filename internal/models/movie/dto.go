@@ -28,7 +28,7 @@ func NewMovieDTO(m *Movie) *MovieDTO {
 
 type CreateMovieDTO struct {
 	Name      string    `json:"name" binding:"required,min=2,max=100"`
-	Director  string    `json:"director" binding:"required,mix=2,max=100"`
+	Director  string    `json:"director" binding:"required,min=2,max=100"`
 	Year      int64     `json:"year" binding:"required,number"`
 	Quantity  int64     `json:"quantity" binding:"required,min=1,max=100"`
 	CreatedAt time.Time `json:"created_at"`
@@ -37,7 +37,7 @@ type CreateMovieDTO struct {
 
 type UpdateMovieDTO struct {
 	Name      string    `json:"name" binding:"required,min=2,max=100"`
-	Director  string    `json:"director" binding:"required,mix=2,max=100"`
+	Director  string    `json:"director" binding:"required,min=2,max=100"`
 	Year      int64     `json:"year" binding:"required,number"`
 	Quantity  int64     `json:"quantity" binding:"required,min=1,max=100"`
 	CreatedAt time.Time `json:"created_at"`
