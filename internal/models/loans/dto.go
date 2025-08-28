@@ -7,17 +7,19 @@ import (
 )
 
 type LoanDTO struct {
+	ID         uuid.UUID `json:"id"`
 	MovieID    uuid.UUID `json:"movie_id"`
 	UserID     uuid.UUID `json:"user_id"`
 	BorrowedAt time.Time `json:"borrowed_at"`
 	ReturnedAt time.Time `json:"returned_at"`
-	Status     string    `json:"Status"`
+	Status     string    `json:"status"`
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 func NewLoanDTO(l *Loan) *LoanDTO {
 	return &LoanDTO{
+		ID:         l.ID,
 		MovieID:    l.MovieID,
 		UserID:     l.UserID,
 		BorrowedAt: l.BorrowedAt,

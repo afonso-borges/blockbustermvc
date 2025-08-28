@@ -11,9 +11,9 @@ import (
 )
 
 type LoanService struct {
-	loanRepo     models.ILoanRepository
-	movieService movieService.IMovieService
-	userService  userService.IUserService
+	loanRepository models.ILoanRepository
+	movieService   movieService.IMovieService
+	userService    userService.IUserService
 }
 
 func NewLoanService(
@@ -22,8 +22,9 @@ func NewLoanService(
 	userService userService.IUserService,
 ) models.ILoanService {
 	return &LoanService{
-		loanRepo:     loanRepo,
-		movieService: movieService,
+		loanRepository: loanRepo,
+		movieService:   movieService,
+		userService:    userService,
 	}
 }
 
@@ -41,7 +42,7 @@ func (l LoanService) CreateLoan(movieId, userId uuid.UUID) (*models.LoanDTO, err
 		return nil, err
 	}
 
-	activeLoans, err := l.loanRepo.GetActiveUserLoans(user.ID)
+	activeLoans, err := l.loanRepository.GetActiveUserLoans(user.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -58,13 +59,23 @@ func (l LoanService) CreateLoan(movieId, userId uuid.UUID) (*models.LoanDTO, err
 		CreatedAt:  time.Now(),
 	}
 
-	if err = l.loanRepo.CreateLoan(loan); err != nil {
+	if err = l.loanRepository.CreateLoan(loan); err != nil {
 		return nil, err
 	}
 
 	movie.Quantity--
 
-	if err = l.movieService.UpdateMovie(movieId, movie); err != nil {
+	updateMovieDTO := &movieService.UpdateMovieDTO{
+		Name:      movie.Name,
+		Director:  movie.Director,
+		Year:      movie.Year,
+		Quantity:  movie.Quantity,
+		CoverURL:  movie.CoverURL,
+		CreatedAt: movie.CreatedAt,
+		UpdatedAt: time.Now(),
+	}
+
+	if err = l.movieService.UpdateMovie(movieId, updateMovieDTO); err != nil {
 		return nil, err
 	}
 
@@ -72,7 +83,7 @@ func (l LoanService) CreateLoan(movieId, userId uuid.UUID) (*models.LoanDTO, err
 }
 
 func (l LoanService) ReturnMovie(loanId uuid.UUID) error {
-	loan, err := l.loanRepo.GetLoan(loanId)
+	loan, err := l.loanRepository.GetLoan(loanId)
 	if err != nil {
 		return err
 	}
@@ -85,7 +96,7 @@ func (l LoanService) ReturnMovie(loanId uuid.UUID) error {
 	loan.UpdatedAt = time.Now()
 	loan.ReturnedAt = time.Now()
 
-	if err := l.loanRepo.UpdateLoan(loan); err != nil {
+	if err := l.loanRepository.UpdateLoan(loan); err != nil {
 		return err
 	}
 
@@ -96,17 +107,27 @@ func (l LoanService) ReturnMovie(loanId uuid.UUID) error {
 
 	movie.Quantity++
 
-	return l.movieService.UpdateMovie(movie.ID, movie)
+	updateMovieDTO := &movieService.UpdateMovieDTO{
+		Name:      movie.Name,
+		Director:  movie.Director,
+		Year:      movie.Year,
+		Quantity:  movie.Quantity,
+		CoverURL:  movie.CoverURL,
+		CreatedAt: movie.CreatedAt,
+		UpdatedAt: time.Now(),
+	}
+
+	return l.movieService.UpdateMovie(movie.ID, updateMovieDTO)
 }
 
 func (l LoanService) GetLoan(id uuid.UUID) (*models.LoanDTO, error) {
-	return l.loanRepo.GetLoan(id)
+	return l.loanRepository.GetLoan(id)
 }
 
 func (l LoanService) GetUserLoans(userId uuid.UUID) ([]*models.LoanDTO, error) {
-	return l.loanRepo.GetActiveUserLoans(userId)
+	return l.loanRepository.GetActiveUserLoans(userId)
 }
 
 func (l LoanService) GetAllLoans() ([]*models.LoanDTO, error) {
-	return l.loanRepo.GetAllLoans()
+	return l.loanRepository.GetAllLoans()
 }

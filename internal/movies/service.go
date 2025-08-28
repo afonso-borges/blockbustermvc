@@ -8,40 +8,36 @@ import (
 )
 
 type MovieService struct {
-	movieRepo models.IMovieRepository
+	movieRepository models.IMovieRepository
 }
 
 func NewMovieService(movieRepo models.IMovieRepository) models.IMovieService {
 	return &MovieService{
-		movieRepo: movieRepo,
+		movieRepository: movieRepo,
 	}
 }
 
 func (m MovieService) CreateMovie(movie *models.CreateMovieDTO) error {
-	if err := movie.Validate(); err != nil {
-		return nil
-	}
-
 	movie.CreatedAt = time.Now()
 	movie.UpdatedAt = time.Now()
 
-	return m.movieRepo.CreateMovie(movie)
+	return m.movieRepository.CreateMovie(movie)
 }
 
 func (m MovieService) GetMovie(id uuid.UUID) (*models.MovieDTO, error) {
-	return m.movieRepo.GetMovie(id)
+	return m.movieRepository.GetMovieById(id)
 }
 
 func (m MovieService) GetAllMovies() ([]*models.MovieDTO, error) {
-	return m.movieRepo.GetAllMovies()
+	return m.movieRepository.GetAllMovies()
 }
 
-func (m MovieService) UpdateMovie(id uuid.UUID, movie *models.MovieDTO) error {
+func (m MovieService) UpdateMovie(id uuid.UUID, movie *models.UpdateMovieDTO) error {
 	movie.UpdatedAt = time.Now()
 
-	return m.movieRepo.UpdateMovie(id, movie)
+	return m.movieRepository.UpdateMovie(id, movie)
 }
 
 func (m MovieService) DeleteMovie(id uuid.UUID) error {
-	return m.movieRepo.DeleteMovie(id)
+	return m.movieRepository.DeleteMovie(id)
 }

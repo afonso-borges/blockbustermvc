@@ -1,8 +1,6 @@
 package models
 
 import (
-	"errors"
-	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -14,6 +12,7 @@ type MovieDTO struct {
 	Director  string    `json:"director"`
 	Year      int64     `json:"year"`
 	Quantity  int64     `json:"quantity"`
+	CoverURL  string    `json:"cover_url"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -29,43 +28,21 @@ func NewMovieDTO(m *Movie) *MovieDTO {
 }
 
 type CreateMovieDTO struct {
-	Name      string    `json:"name"`
-	Director  string    `json:"director"`
-	Year      int64     `json:"year"`
-	Quantity  int64     `json:"quantity"`
-	CoverURL  string    `json:"cover_url"`
+	Name      string    `json:"name" binding:"required,min=2,max=100"`
+	Director  string    `json:"director" binding:"required,mix=2,max=100"`
+	Year      int64     `json:"year" binding:"required,number"`
+	Quantity  int64     `json:"quantity" binding:"required,min=1,max=100"`
+	CoverURL  string    `json:"cover_url,omitempty"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"update_at"`
 }
 
-func (m *CreateMovieDTO) Validate() error {
-	if strings.TrimSpace(m.Name) == "" {
-		return errors.New("movie name is required")
-	}
-
-	if strings.TrimSpace(m.Director) == "" {
-		return errors.New("directors name is required")
-	}
-
-	if !validReleaseYear(m.Year) {
-		return errors.New("valid release year is required")
-	}
-
-	if m.Quantity <= 0 {
-		return errors.New("quantity must be bigger than zero")
-	}
-
-	return nil
-}
-
-func validReleaseYear(year int64) bool {
-	currentYear := int64(time.Now().Year())
-
-	firstMovieRelease := int64(1888)
-
-	if year <= firstMovieRelease || year > currentYear {
-		return false
-	}
-
-	return true
+type UpdateMovieDTO struct {
+	Name      string    `json:"name" binding:"required,min=2,max=100"`
+	Director  string    `json:"director" binding:"required,mix=2,max=100"`
+	Year      int64     `json:"year" binding:"required,number"`
+	Quantity  int64     `json:"quantity" binding:"required,min=1,max=100"`
+	CoverURL  string    `json:"cover_url"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

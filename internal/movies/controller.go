@@ -104,7 +104,7 @@ func (mc *MoviesController) UpdateMovie(ctx *gin.Context) {
 		return
 	}
 
-	var movie models.MovieDTO
+	var movie models.UpdateMovieDTO
 
 	if err := ctx.ShouldBindJSON(&movie); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{

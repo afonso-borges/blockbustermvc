@@ -2,46 +2,36 @@ package users
 
 import (
 	models "blockbustermvc/internal/models/user"
-	"time"
 
 	"github.com/google/uuid"
 )
 
 type UserService struct {
-	userRepo models.IUserRepository
+	userRepository models.IUserRepository
 }
 
 func NewUserService(userRepo models.IUserRepository) models.IUserService {
 	return &UserService{
-		userRepo: userRepo,
+		userRepository: userRepo,
 	}
 }
 
 func (u UserService) CreateUser(user *models.CreateUserDTO) error {
-	if err := user.Validate(); err != nil {
-		return nil
-	}
-
-	user.CreatedAt = time.Now()
-	user.UpdatedAt = time.Now()
-
-	return u.userRepo.CreateUser(user)
+	return u.userRepository.CreateUser(user)
 }
 
 func (u UserService) GetUser(id uuid.UUID) (*models.UserDTO, error) {
-	return u.userRepo.GetUser(id)
+	return u.userRepository.GetUserById(id)
 }
 
 func (u UserService) GetAllUsers() ([]*models.UserDTO, error) {
-	return u.userRepo.GetAllUsers()
+	return u.userRepository.GetAllUsers()
 }
 
-func (u UserService) UpdateUser(id uuid.UUID, user *models.UserDTO) error {
-	user.UpdatedAt = time.Now()
-
-	return u.userRepo.UpdateUser(id, user)
+func (u UserService) UpdateUser(id uuid.UUID, user *models.UpdateUserDTO) error {
+	return u.userRepository.UpdateUser(id, user)
 }
 
 func (u UserService) DeleteUser(id uuid.UUID) error {
-	return u.userRepo.DeleteUser(id)
+	return u.userRepository.DeleteUser(id)
 }

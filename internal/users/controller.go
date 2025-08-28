@@ -104,12 +104,13 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	var user models.UserDTO
+	var user models.UpdateUserDTO
 
 	if err := ctx.ShouldBindJSON(&user); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid request body",
 		})
+		return
 	}
 
 	err = uc.userService.UpdateUser(id, &user)

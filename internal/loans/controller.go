@@ -26,7 +26,6 @@ func (lc *LoansController) RegisterRoutes(r *gin.Engine) {
 		loans.POST("/:id/return", lc.ReturnMovie)
 		loans.GET("/:id", lc.GetLoan)
 		loans.GET("", lc.GetAllLoans)
-		loans.GET("/:id", lc.GetUserLoans)
 	}
 
 	users := r.Group("/loans/users")
