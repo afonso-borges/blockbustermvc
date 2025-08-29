@@ -23,7 +23,7 @@ type userRepository struct {
 	DB *pgxpool.Pool
 }
 
-func NewuserRepository(db *pgxpool.Pool) models.IUserRepository {
+func NewUserRepository(db *pgxpool.Pool) models.IUserRepository {
 	return &userRepository{
 		DB: db,
 	}
