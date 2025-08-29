@@ -10,17 +10,38 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type UserRepository struct {
+/*
+userRepository is a struct that represents a Postgres database for storing user objects.
+
+Fields:
+- DB (*pgxpool.Pool): A pointer to a Postgres database connection pool.
+
+Behavior:
+- Provides methods for interacting with the user table in the database.
+*/
+type userRepository struct {
 	DB *pgxpool.Pool
 }
 
-func NewUserRepository(db *pgxpool.Pool) models.IUserRepository {
-	return &UserRepository{
+func NewuserRepository(db *pgxpool.Pool) models.IUserRepository {
+	return &userRepository{
 		DB: db,
 	}
 }
+/*
+CreateUser is a method of userRepository struct that creates a new user object in the postgres database.
 
-func (r *UserRepository) CreateUser(user *models.CreateUserDTO) error {
+Parameters:
+- user (*models.CreateUserDTO): A pointer to a CreateUserDTO struct containing the user data to be created.
+
+Returns:
+- error: An error if the user creation fails, otherwise nil.
+
+Behavior:
+- Inserts a new user into the users table in the database.
+- Returns an error if the user creation fails.
+*/
+func (r *userRepository) CreateUser(user *models.CreateUserDTO) error {
 	query := `
 		INSERT INTO users (user_name, email)
 		VALUES ($1, $2)`
@@ -36,7 +57,20 @@ func (r *UserRepository) CreateUser(user *models.CreateUserDTO) error {
 	return nil
 }
 
-func (r *UserRepository) GetUserById(id uuid.UUID) (*models.UserDTO, error) {
+/*
+GetUserById is a method of userRepository struct that retrieves a user object from the postgres database by its ID.
+
+Parameters:
+- id (uuid.UUID): The ID of the user to be retrieved.
+
+Returns:
+- (*models.UserDTO, error): A pointer to a UserDTO struct containing the user data, or an error if the user retrieval fails.
+
+Behavior:
+- Retrieves a user from the users table in the database by its ID.
+- Returns an error if the user retrieval fails.
+*/
+func (r *userRepository) GetUserById(id uuid.UUID) (*models.UserDTO, error) {
 	query := `
 		SELECT id, user_name, email, created_at, updated_at
 		FROM users
@@ -57,7 +91,20 @@ func (r *UserRepository) GetUserById(id uuid.UUID) (*models.UserDTO, error) {
 	return &user, nil
 }
 
-func (r *UserRepository) GetAllUsers() ([]*models.UserDTO, error) {
+/*
+GetAllUsers is a method of userRepository struct that retrieves all user objects from the postgres database.
+
+Parameters:
+- None
+
+Returns:
+- ([]*models.UserDTO, error): A slice of pointers to UserDTO structs containing the user data, or an error if the user retrieval fails.
+
+Behavior:
+- Retrieves all users from the users table in the database.
+- Returns an error if the user retrieval fails.
+*/
+func (r *userRepository) GetAllUsers() ([]*models.UserDTO, error) {
 	query := `
 		SELECT id, user_name, email, created_at
 		FROM users
@@ -91,7 +138,21 @@ func (r *UserRepository) GetAllUsers() ([]*models.UserDTO, error) {
 	return users, nil
 }
 
-func (r *UserRepository) UpdateUser(id uuid.UUID, user *models.UpdateUserDTO) error {
+/*
+UpdateUser is a method of userRepository struct that updates a user object in the postgres database.
+
+Parameters:
+- id (uuid.UUID): The ID of the user to be updated.
+- user (*models.UpdateUserDTO): A pointer to an UpdateUserDTO struct containing the user data to be updated.
+
+Returns:
+- error: An error if the user update fails, otherwise nil.
+
+Behavior:
+- Updates a user in the users table in the database.
+- Returns an error if the user update fails.
+*/
+func (r *userRepository) UpdateUser(id uuid.UUID, user *models.UpdateUserDTO) error {
 	query := `
 		UPDATE users
 		SET user_name = $2, email = $3, updated_at = $4
@@ -116,7 +177,20 @@ func (r *UserRepository) UpdateUser(id uuid.UUID, user *models.UpdateUserDTO) er
 	return nil
 }
 
-func (r *UserRepository) DeleteUser(id uuid.UUID) error {
+/*
+DeleteUser is a method of userRepository struct that deletes a user object from the postgres database.
+
+Parameters:
+- id (uuid.UUID): The ID of the user to be deleted.
+
+Returns:
+- error: An error if the user deletion fails, otherwise nil.
+
+Behavior:
+- Deletes a user from the users table in the database.
+- Returns an error if the user deletion fails.
+*/
+func (r *userRepository) DeleteUser(id uuid.UUID) error {
 	query := `DELETE FROM users WHERE id = $1`
 
 	result, err := r.DB.Exec(context.Background(), query, id)

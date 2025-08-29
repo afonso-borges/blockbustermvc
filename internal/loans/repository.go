@@ -10,17 +10,39 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type LoanRepository struct {
+/*
+loanRepository is a struct that represents a Postgres database for storing loan objects.
+
+Fields:
+- DB (*pgxpool.Pool): A pointer to a Postgres database connection pool.
+
+Behavior:
+- Provides methods for interacting with the loan table in the database.
+*/
+type loanRepository struct {
 	DB *pgxpool.Pool
 }
 
 func NewLoanRepository(db *pgxpool.Pool) models.ILoanRepository {
-	return &LoanRepository{
+	return &loanRepository{
 		DB: db,
 	}
 }
 
-func (r *LoanRepository) CreateLoan(loan *models.CreateLoanDTO) error {
+/*
+CreateLoan is a method of loanRepository struct that creates a new loan object in the postgres database.
+
+Parameters:
+- loan (*models.CreateLoanDTO): A pointer to a CreateLoanDTO struct containing the loan data to be created.
+
+Returns:
+- error: An error if the loan creation fails, otherwise nil.
+
+Behavior:
+- Inserts a new loan into the loans table in the database.
+- Returns an error if the loan creation fails.
+*/
+func (r *loanRepository) CreateLoan(loan *models.CreateLoanDTO) error {
 	query := `
 		INSERT INTO loans (movie_id, user_id, borrowed_at, status, created_at, updated_at)
 		VALUES ($1, $2, $3, $4, $5, $6)`
@@ -42,7 +64,20 @@ func (r *LoanRepository) CreateLoan(loan *models.CreateLoanDTO) error {
 	return nil
 }
 
-func (r *LoanRepository) UpdateLoan(loan *models.LoanDTO) error {
+/*
+UpdateLoan is a method of loanRepository struct that updates a loan object in the postgres database.
+
+Parameters:
+- loan (*models.LoanDTO): A pointer to a LoanDTO struct containing the loan data to be updated.
+
+Returns:
+- error: An error if the loan update fails, otherwise nil.
+
+Behavior:
+- Updates a loan in the loans table in the database.
+- Returns an error if the loan update fails.
+*/
+func (r *loanRepository) UpdateLoan(loan *models.LoanDTO) error {
 	query := `
 		UPDATE loans
 		SET returned_at = $2, status = $3, updated_at = $4
@@ -68,7 +103,20 @@ func (r *LoanRepository) UpdateLoan(loan *models.LoanDTO) error {
 	return nil
 }
 
-func (r *LoanRepository) ReturnMovie(loanId uuid.UUID) error {
+/*
+ReturnMovie is a method of loanRepository struct that returns a movie object from the postgres database.
+
+Parameters:
+- loanId (uuid.UUID): The ID of the loan to be returned.
+
+Returns:
+- error: An error if the movie return fails, otherwise nil.
+
+Behavior:
+- Updates a loan in the loans table in the database.
+- Returns an error if the movie return fails.
+*/
+func (r *loanRepository) ReturnMovie(loanId uuid.UUID) error {
 	query := `
 		UPDATE loans
 		SET returned_at = $2, status = $3, updated_at = $4
@@ -93,7 +141,20 @@ func (r *LoanRepository) ReturnMovie(loanId uuid.UUID) error {
 	return nil
 }
 
-func (r *LoanRepository) GetLoan(id uuid.UUID) (*models.LoanDTO, error) {
+/*
+GetLoan is a method of loanRepository struct that retrieves a loan object from the postgres database by its ID.
+
+Parameters:
+- id (uuid.UUID): The ID of the loan to be retrieved.
+
+Returns:
+- (*models.LoanDTO, error): A pointer to a LoanDTO struct containing the loan data, or an error if the loan retrieval fails.
+
+Behavior:
+- Retrieves a loan from the loans table in the database by its ID.
+- Returns an error if the loan retrieval fails.
+*/
+func (r *loanRepository) GetLoan(id uuid.UUID) (*models.LoanDTO, error) {
 	query := `
 		SELECT id, movie_id, user_id, borrowed_at, returned_at, status, created_at, updated_at
 		FROM loans
@@ -123,7 +184,20 @@ func (r *LoanRepository) GetLoan(id uuid.UUID) (*models.LoanDTO, error) {
 	return &loan, nil
 }
 
-func (r *LoanRepository) GetActiveUserLoans(userId uuid.UUID) ([]*models.LoanDTO, error) {
+/*
+GetActiveUserLoans is a method of loanRepository struct that retrieves all active loans for a specific user from the postgres database.
+
+Parameters:
+- userId (uuid.UUID): The ID of the user to retrieve active loans for.
+
+Returns:
+- ([]*models.LoanDTO, error): A slice of LoanDTO structs containing the active loans for the user, or an error if the retrieval fails.
+
+Behavior:
+- Retrieves all active loans from the loans table in the database for the specified user.
+- Returns an error if the retrieval fails.
+*/
+func (r *loanRepository) GetActiveUserLoans(userId uuid.UUID) ([]*models.LoanDTO, error) {
 	query := `
 		SELECT id, movie_id, user_id, borrowed_at, returned_at, status, created_at, updated_at
 		FROM loans
@@ -169,7 +243,17 @@ func (r *LoanRepository) GetActiveUserLoans(userId uuid.UUID) ([]*models.LoanDTO
 	return loans, nil
 }
 
-func (r *LoanRepository) GetAllLoans() ([]*models.LoanDTO, error) {
+/*
+GetAllLoans is a method of loanRepository struct that retrieves all loans from the postgres database.
+
+Returns:
+- ([]*models.LoanDTO, error): A slice of LoanDTO structs containing all loans, or an error if the retrieval fails.
+
+Behavior:
+- Retrieves all loans from the loans table in the database.
+- Returns an error if the retrieval fails.
+*/
+func (r *loanRepository) GetAllLoans() ([]*models.LoanDTO, error) {
 	query := `
 		SELECT id, movie_id, user_id, borrowed_at, returned_at, status, created_at, updated_at
 		FROM loans
