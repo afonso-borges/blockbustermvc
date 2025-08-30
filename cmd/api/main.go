@@ -5,10 +5,12 @@ import (
 	loansModule "blockbustermvc/internal/loans"
 	moviesModule "blockbustermvc/internal/movies"
 	usersModule "blockbustermvc/internal/users"
+	webModule "blockbustermvc/internal/web"
 	"encoding/gob"
 	"log"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -41,13 +43,24 @@ func main() {
 	usersController := usersModule.NewUserController(userService)
 	loansController := loansModule.NewLoansController(loanService)
 
+	webController := webModule.NewWebController(movieService, userService, loanService)
+
 	// Initialize Gin router
 	router := gin.Default()
+
+	// Config router
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
+	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+	router.Use(cors.New(config))
 
 	// Register routes
 	usersController.RegisterRoutes(router)
 	moviesController.RegisterRoutes(router)
 	loansController.RegisterRoutes(router)
+
+	webController.RegisterRoutes(router)
 
 	// Get server port from environment or use default
 	port := os.Getenv("SERVER_PORT")
