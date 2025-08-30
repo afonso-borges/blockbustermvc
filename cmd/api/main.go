@@ -56,9 +56,10 @@ func main() {
 	router.Use(cors.New(config))
 
 	// Register routes
-	usersController.RegisterRoutes(router)
-	moviesController.RegisterRoutes(router)
-	loansController.RegisterRoutes(router)
+	apiRouter := router.Group("/api")
+	usersController.RegisterRoutes(apiRouter)
+	moviesController.RegisterRoutes(apiRouter)
+	loansController.RegisterRoutes(apiRouter)
 
 	webController.RegisterRoutes(router)
 

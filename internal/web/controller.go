@@ -34,6 +34,9 @@ func NewWebController(
 
 func (wc *WebController) RegisterRoutes(router *gin.Engine) {
 	router.GET("/", wc.ServeHome)
+	router.GET("/users", wc.ServeUsers)
+
+	router.POST("/users", wc.CreateUser)
 }
 
 func (wc *WebController) ServeHome(c *gin.Context) {
@@ -65,7 +68,7 @@ func (wc *WebController) ServeHome(c *gin.Context) {
 		"ActiveSection": "dashboard",
 		"FlashMessage":  flashMessage,
 		"FlashType":     flashType,
-		"Stat": map[string]any{
+		"Stats": map[string]any{
 			"TotalMovies":     len(movies),
 			"TotalUsers":      len(users),
 			"TotalLoans":      len(loans),
@@ -79,6 +82,43 @@ func (wc *WebController) ServeHome(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Error while trying to render template: %v", err)
 		return
 	}
+}
+
+func (wc *WebController) ServeUsers(c *gin.Context) {
+	users, _ := wc.userService.GetAllUsers()
+
+	flashMessage, flashType := wc.getFlashMessage(c)
+	data := map[string]any{
+		"Title":         "User Management",
+		"Users":         users,
+		"ActiveSection": "users",
+		"FlashMessage":  flashMessage,
+		"FlashType":     flashType,
+	}
+	err := wc.templates.ExecuteTemplate(c.Writer, "layout", data)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Error while trying to render template: %v", err)
+		return
+	}
+}
+
+func (wc *WebController) CreateUser(c *gin.Context) {
+	name := c.PostForm("name")
+	email := c.PostForm("email")
+
+	user := &userModels.CreateUserDTO{
+		UserName: name,
+		Email:    email,
+	}
+
+	err := wc.userService.CreateUser(user)
+	if err != nil {
+		wc.addFlashMessage(c, "Error creating user "+err.Error(), "error")
+	}
+
+	wc.addFlashMessage(c, "User created successfully", "success")
+
+	c.Redirect(http.StatusSeeOther, "/users")
 }
 
 func (wc *WebController) addFlashMessage(c *gin.Context, message, messageType string) {

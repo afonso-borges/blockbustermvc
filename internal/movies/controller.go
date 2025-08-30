@@ -18,7 +18,7 @@ func NewMoviesController(movieService *models.IMovieService) *MoviesController {
 	}
 }
 
-func (mc *MoviesController) RegisterRoutes(r *gin.Engine) {
+func (mc *MoviesController) RegisterRoutes(r *gin.RouterGroup) {
 	movies := r.Group("/movies")
 
 	{
