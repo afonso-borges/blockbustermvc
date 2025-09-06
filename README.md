@@ -90,13 +90,12 @@ cp .env.example .env
 Configure the following environment variables:
 
 ```env
-BLK_DATABASE_HOST=localhost
-BLK_DATABASE_PORT=5432
-BLK_DATABASE_USER=postgres
-BLK_DATABASE_PASSWORD=your_password
-BLK_DATABASE_NAME=blockbuster
-BLK_DATABASE_SSL_MODE=disable
-SERVER_PORT=8080
+BLK_DATABASE_PORT = 5534
+BLK_DATABASE_NAME = "blockbuster"
+BLK_DATABASE_USER = "postgres"
+BLK_DATABASE_PASSWORD = "your_password"
+BLK_DATABASE_HOST = "localhost"
+BLK_DATABASE_SSL_MODE = "enabled"
 ```
 
 ### 3. Database Setup
