@@ -1,0 +1,56 @@
+{{define "layout"}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    {{template "styles" .}}
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="header">
+            <h1>📚 Blockbuster Management</h1>
+            <div>
+                <span style="font-size: 14px; opacity: 0.8;">API: http://localhost:8080</span>
+            </div>
+        </div>
+
+
+        {{if .FlashMessage}}
+        <div class="flash-message flash-{{.FlashType}}">
+            {{.FlashMessage}}
+        </div>
+        {{end}}
+
+
+        <div class="nav-tabs">
+            <a href="/" class="nav-tab {{if eq .ActiveSection " dashboard"}}active{{end}}">📊 Dashboard</a>
+            <a href="/movies" class="nav-tab {{if eq .ActiveSection " movies"}}active{{end}}">📼 Movies</a>
+            <a href="/users" class="nav-tab {{if eq .ActiveSection " users"}}active{{end}}">👥 Users</a>
+            <a href="/loans" class="nav-tab {{if eq .ActiveSection " loans"}}active{{end}}">🔄 Loans</a>
+        </div>
+
+
+        {{if eq .ActiveSection "dashboard"}}
+        {{template "dashboard" .}}
+        {{else if eq .ActiveSection "movies"}}
+        {{template "movies" .}}
+        {{else if eq .ActiveSection "users"}}
+        {{template "users" .}}
+        {{else if eq .ActiveSection "loans"}}
+        {{template "loans" .}}
+        {{else}}
+        {{template "dashboard" .}}
+        {{end}}
+    </div>
+
+
+    {{template "modals" .}}
+</body>
+
+</html>
+{{end}}

@@ -1,0 +1,125 @@
+{{define "users"}}
+
+<div id="users" class="content section active">
+    <div class="section-header">
+        <h2 class="section-title">👥 Users' Management</h2>
+        <button class="btn btn-primary" onclick="document.getElementById('addUserModal').style.display='block'">
+            ➕ Add User
+        </button>
+    </div>
+
+
+    {{if .IsEdit}}
+    <div class="card" style="margin-bottom: 20px;">
+        <div class="card-header">
+            <h3 class="card-title">✏️ Edit User</h3>
+        </div>
+        <form action="/users/{{.User.ID}}/edit" method="POST">
+            <div class="form-group">
+                <label class="form-label">Nome:</label>
+                <input type="text" name="name" class="form-input" value="{{.User.UserName}}" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Email:</label>
+                <input type="email" name="email" class="form-input" value="{{.User.Email}}" required>
+            </div>
+            <div class="actions">
+                <button type="submit" class="btn btn-success">💾 Save changes</button>
+                <a href="/users" class="btn btn-secondary">❌ Cancel</a>
+            </div>
+        </form>
+    </div>
+    {{else if .ShowUserLoans}}
+
+    <div class="card" style="margin-bottom: 20px;">
+        <div class="card-header">
+            <h3 class="card-title">📚 {{.User.Name}}'s loans'</h3>
+            <a href="/users" class="btn btn-secondary btn-sm">← Back to Users</a>
+        </div>
+        <div style="padding: 15px;">
+            <p><strong>Email:</strong> {{.User.Email}}</p>
+            <p><strong>ID:</strong> {{.User.ID}}</p>
+        </div>
+    </div>
+
+    {{if .Loans}}
+    <div class="grid grid-2">
+        {{range .Loans}}
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Loan #{{.ID}}</h3>
+                <span class="card-status {{if eq .Status " active"}}status-active{{else}}status-returned{{end}}">
+                    {{if eq .Status "active"}}Ativo{{else}}Devolvido{{end}}
+                </span>
+            </div>
+            <p><strong>Movie:</strong>
+                {{if index $.MoviesMap .MovieID}}
+                {{(index $.MovieMap .MovieID).Name}} por {{(index $.MovieMap .MovieID).Director}}
+                {{else}}
+                Movie ID: {{.MovieID}} (not found)
+                {{end}}
+            </p>
+            <p><strong>Borrowed at:</strong> {{.BorrowedAt.Format "02/01/2006 15:04"}}</p>
+            {{if .ReturnedAt}}
+            <p><strong>Returned at:</strong> {{.ReturnedAt.Format "02/01/2006 15:04"}}</p>
+            {{end}}
+            <div class="actions">
+                {{if eq .Status "active"}}
+                <form action="/loans/{{.ID}}/return" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-success btn-sm">📼 Return</button>
+                </form>
+                {{end}}
+            </div>
+        </div>
+        {{end}}
+    </div>
+    {{else}}
+    <div class="card" style="text-align: center; padding: 40px;">
+        <h3>No loans found</h3>
+        <p>This user has no loans already.</p>
+    </div>
+    {{end}}
+    {{else}}
+
+    <div class="card" style="margin-bottom: 20px;">
+        <form action="/users/search" method="GET" style="display: flex; gap: 15px; align-items: end;">
+            <div class="form-group" style="flex: 1;">
+                <label class="form-label">Find users:</label>
+                <input type="text" name="q" class="form-input" placeholder="Name or Email" value="{{.SearchQuery}}">
+            </div>
+            <button type="submit" class="btn btn-primary">🔍 Find</button>
+            {{if .SearchQuery}}
+            <a href="/users" class="btn btn-secondary">❌ Reset</a>
+            {{end}}
+        </form>
+    </div>
+
+
+    <div class="grid grid-3">
+        {{range .Users}}
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">{{.UserName}}</h3>
+                <span class="card-status status-active">Active</span>
+            </div>
+            <p><strong>Email:</strong> {{.Email}}</p>
+            <p><strong>ID:</strong> {{.ID}}</p>
+            <div class="actions">
+                <a href="/users/{{.ID}}/edit" class="btn btn-primary btn-sm">✏️ Edit</a>
+                <a href="/users/{{.ID}}/loans" class="btn btn-warning btn-sm">📼 See loans</a>
+                <form action="/users/{{.ID}}/delete" method="POST" style="display: inline;"
+                    onsubmit="return confirm('Are you sure about excluding this user?'')">
+                    <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
+                </form>
+            </div>
+        </div>
+        {{else}}
+        <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+            <h3>No users found</h3>
+            <p>Add your first user using the button above.<</p>
+        </div>
+        {{end}}
+    </div>
+    {{end}}
+</div>
+{{end}}

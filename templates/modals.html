@@ -1,0 +1,110 @@
+{{define "modals"}}
+
+<div id="addMovieModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Add New Movie</h3>
+            <span class="close" onclick="document.getElementById('addMovieModal').style.display='none'">&times;</span>
+        </div>
+        <form method="POST" action="/movies">
+            <div class="form-group">
+                <label class="form-label">Title</label>
+                <input type="text" class="form-input" name="title" placeholder="Insert movie title" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Director</label>
+                <input type="text" class="form-input" name="director" placeholder="Insert movie director" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Release Year</label>
+                <input type="text" class="form-input" name="year" placeholder="Insert movie release year" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Quantity</label>
+                <input type="number" class="form-input" name="quantity" placeholder="Insert movie quantity" min="1"
+                    required>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary"
+                    onclick="document.getElementById('addMovieModal').style.display='none'">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div id="addUserModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Add New User</h3>
+            <span class="close" onclick="document.getElementById('addUserModal').style.display='none'">&times;</span>
+        </div>
+        <form method="POST" action="/users">
+            <div class="form-group">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-input" name="name" placeholder="Insert users name" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" name="email" placeholder="Insert email" required>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary"
+                    onclick="document.getElementById('addUserModal').style.display='none'">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div id="addLoanModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">New Loan</h3>
+            <span class="close" onclick="document.getElementById('addLoanModal').style.display='none'">&times;</span>
+        </div>
+        <form method="POST" action="/loans">
+            <div class="form-group">
+                <label class="form-label">User</label>
+                <select class="form-select" name="user_id" required>
+                    <option value="">Select a users</option>
+                    {{range .Users}}
+                    <option value="{{.ID}}">{{.UserName}} ({{.Email}})</option>
+                    {{end}}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Movie</label>
+                <select class="form-select" name="movie_id" required>
+                    <option value="">Select a movie</option>
+                    {{range .Movies}}
+                    {{if gt .Quantity 0}}
+                    <option value="{{.ID}}">{{.Name}} - {{.Director}}</option>
+                    {{end}}
+                    {{end}}
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary"
+                    onclick="document.getElementById('addLoanModal').style.display='none'">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create Loan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Close modal when clicking outside of it
+    window.onclick = function (event) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+</script>
+{{end}}

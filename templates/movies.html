@@ -1,0 +1,85 @@
+{{define "movies"}}
+<div id="movies" class="content section active">
+    <div class="section-header">
+        <h2 class="section-title">📼 Movies' Management</h2>
+        <button class="btn btn-primary" onclick="document.getElementById('addMovieModal').style.display='block'">
+            ➕ Add movie
+        </button>
+    </div>
+
+    {{if .IsEdit}}
+    <div class="card" style="margin-bottom: 20px;">
+        <div class="card-header">
+            <h3 class="card-title">✏ Edit Movie</h3>
+        </div>
+        <form action="/movies/{{.Movie.ID}}/edit" method="POST">
+            <div class="form-group">
+                <label class="form-label">Title:</label>
+                <input type="text" name="Title" class="form-input" value="{{.Movie.Name}}" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Director:</label>
+                <input type="text" name="Director" class="form-input" value="{{.Movie.Director}}" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Year:</label>
+                <input type="text" name="Year" class="form-input" value="{{.Movie.Year}}" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Quantity:</label>
+                <input type="number" name="Quantity" class="form-input" value="{{.Movie.Quantity}}" min="0" required>
+            </div>
+            <div class="actions">
+                <button type="submit" class="btn btn-success">💾 Save changes</button>
+                <a href="/movies" class="btn btn-secondary">❌ Cancel</a>
+            </div>
+        </form>
+    </div>
+    {{else}}
+    <div class="card" style="margin-bottom: 20px;">
+        <form action="/movies/search" method="GET" style="display: flex; gap: 15px; align-items: end;">
+            <div class="form-group" style="flex: 1;">
+                <label class="form-label">Find movies:</label>
+                <input type="text" name="q" class="form-input" placeholder="Title, Director or Year..."
+                    value="{{.SearchQuery}}">
+            </div>
+            <button type="submit" class="btn btn-primary">🔍 Find</button>
+            {{if .SearchQuery}}
+            <a href="/movies" class="btn btn-secondary">❌ Reset</a>
+            {{end}}
+        </form>
+    </div>
+
+    <div id="movies-content">
+        {{if .Movies}}
+        <div class="grid grid-3">
+            {{range .Movies}}
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{.Name}}</h3>
+                    <span class="card-status {{if gt .Quantity 0}}status-active{{else}}status-returned{{end}}">
+                        {{if gt .Quantity 0}}Available{{else}}Unavailable{{end}}
+                    </span>
+                </div>
+                <p><strong>Director:</strong> {{.Director}}</p>
+                <p><strong>Quantity:</strong> {{.Quantity}}</p>
+                <div class="actions">
+                    <a href="/movies/{{.ID}}/edit" class="btn btn-primary btn-sm">✏️ Editar</a>
+                    <form action="/movies/{{.ID}}/delete" method="POST" style="display: inline;"
+                        onsubmit="return confirm('Are you sure about excluding this movie?')">
+                        <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
+                    </form>
+                </div>
+            </div>
+            {{end}}
+        </div>
+        {{else}}
+        <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+            <h3>No movie found</h3>
+            <p>Add your first movie using the button above.</p>
+        </div>
+        {{end}}
+    </div>
+    {{end}}
+</div>
+{{end}}

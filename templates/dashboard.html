@@ -1,0 +1,124 @@
+{{define "dashboard"}}
+<div class="content">
+    <div class="section-header">
+        <h2 class="section-title">📊 Dashboard - General</h2>
+        <div style="display: flex; gap: 10px;">
+            <a href="/movies" class="btn btn-primary">📼 Manage Movies</a>
+            <a href="/users" class="btn btn-primary">👥 Manage Users</a>
+            <a href="/loans" class="btn btn-primary">🔄 Manage Loans</a>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{.Stats.TotalMovies}}</div>
+            <div class="stat-label">Total Movies:</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{.Stats.TotalUsers}}</div>
+            <div class="stat-label">Total Users:</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{.Stats.TotalLoans}}</div>
+            <div class="stat-label">Total Loans:</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{.Stats.ActiveLoans}}</div>
+            <div class="stat-label">Actove Loans</div>
+        </div>
+    </div>
+
+    <div class="grid grid-2">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">📚 Available Movies ({{.Stats.AvailableMovies}})</h3>
+                <a href="/movies" class="btn btn-primary btn-sm">Display all</a>
+            </div>
+            {{if .Movies}}
+            {{$hasAvailable := false}}
+            {{range .Movies}}
+            {{if gt .Quantity 0}}
+            {{$hasAvailable = true}}
+            <div style="padding: 10px 0; border-bottom: 1px solid #e9ecef;">
+                <strong>{{.Name}}</strong> por {{.Director}}
+                <br><small>Quantidade: {{.Quantity}}</small>
+            </div>
+            {{end}}
+            {{end}}
+            {{if not $hasAvailable}}
+            <p style="text-align: center; color: #6c757d; padding: 20px;">None movies available.</p>
+            {{end}}
+            {{else}}
+            <p style="text-align: center; color: #6c757d; padding: 20px;">None movies registered.</p>
+            {{end}}
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">👥 Registered Users</h3>
+                <a href="/users" class="btn btn-primary btn-sm">Display all</a>
+            </div>
+            {{if .Users}}
+            {{range .Users}}
+            <div style="padding: 10px 0; border-bottom: 1px solid #e9ecef;">
+                <strong>{{.UserName}}</strong>
+                <br><small>{{.Email}}</small>
+            </div>
+            {{end}}
+            {{else}}
+            <p style="text-align: center; color: #6c757d; padding: 20px;">None users registered.</p>
+            {{end}}
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+        <div class="card-header">
+            <h3 class="card-title">🔄 Active Loans</h3>
+            <a href="/loans" class="btn btn-primary btn-sm">Ver Todos</a>
+        </div>
+        {{if .Loans}}
+        {{$hasActive := false}}
+        {{range .Loans}}
+        {{if eq .Status "active"}}
+        {{$hasActive = true}}
+        <div
+            style="padding: 15px; border: 1px solid #e9ecef; border-radius: 8px; margin-bottom: 10px; background: #f8f9fa;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>Loans #{{.ID}}</strong>
+                    <br><small>Movie ID: {{.MovieID}} | User ID: {{.UserID}}</small>
+                    <br><small>Borrowed at: {{.BorrowedAt.Format "02/01/2006 15:04"}}</small>
+                </div>
+                <form action="/loans/{{.ID}}/return" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-success btn-sm">📼 Return</button>
+                </form>
+            </div>
+        </div>
+        {{end}}
+        {{end}}
+        {{if not $hasActive}}
+        <p style="text-align: center; color: #6c757d; padding: 20px;">None active loans.</p>
+        {{end}}
+        {{else}}
+        <p style="text-align: center; color: #6c757d; padding: 20px;">None loans registered.</p>
+        {{end}}
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+        <div class="card-header">
+            <h3 class="card-title">⚡ Quick actions</h3>
+        </div>
+        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="document.getElementById('addMovieModal').style.display='block'">
+                ➕ Add Movie
+            </button>
+            <button class="btn btn-primary" onclick="document.getElementById('addUserModal').style.display='block'">
+                ➕ Add User
+            </button>
+            <button class="btn btn-primary" onclick="document.getElementById('addLoanModal').style.display='block'">
+                ➕ New Loan
+            </button>
+        </div>
+    </div>
+</div>
+{{end}}
