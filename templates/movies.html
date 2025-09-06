@@ -15,19 +15,19 @@
         <form action="/movies/{{.Movie.ID}}/edit" method="POST">
             <div class="form-group">
                 <label class="form-label">Title:</label>
-                <input type="text" name="Title" class="form-input" value="{{.Movie.Name}}" required>
+                <input type="text" name="name" class="form-input" value="{{.Movie.Name}}" required>
             </div>
             <div class="form-group">
                 <label class="form-label">Director:</label>
-                <input type="text" name="Director" class="form-input" value="{{.Movie.Director}}" required>
+                <input type="text" name="director" class="form-input" value="{{.Movie.Director}}" required>
             </div>
             <div class="form-group">
                 <label class="form-label">Year:</label>
-                <input type="text" name="Year" class="form-input" value="{{.Movie.Year}}" required>
+                <input type="text" name="year" class="form-input" value="{{.Movie.Year}}" required>
             </div>
             <div class="form-group">
                 <label class="form-label">Quantity:</label>
-                <input type="number" name="Quantity" class="form-input" value="{{.Movie.Quantity}}" min="0" required>
+                <input type="number" name="quantity" class="form-input" value="{{.Movie.Quantity}}" min="1" required>
             </div>
             <div class="actions">
                 <button type="submit" class="btn btn-success">💾 Save changes</button>
@@ -62,9 +62,10 @@
                     </span>
                 </div>
                 <p><strong>Director:</strong> {{.Director}}</p>
+                <p><strong>Release year:</strong> {{.Year}}</p>
                 <p><strong>Quantity:</strong> {{.Quantity}}</p>
                 <div class="actions">
-                    <a href="/movies/{{.ID}}/edit" class="btn btn-primary btn-sm">✏️ Editar</a>
+                    <a href="/movies/{{.ID}}/edit" class="btn btn-primary btn-sm">✏️ Edit</a>
                     <form action="/movies/{{.ID}}/delete" method="POST" style="display: inline;"
                         onsubmit="return confirm('Are you sure about excluding this movie?')">
                         <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>

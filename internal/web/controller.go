@@ -4,7 +4,6 @@ import (
 	loanModels "blockbustermvc/internal/models/loans"
 	movieModels "blockbustermvc/internal/models/movie"
 	userModels "blockbustermvc/internal/models/user"
-	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -46,9 +45,9 @@ func (wc *WebController) RegisterRoutes(router *gin.Engine) {
 	router.GET("/movies/:id/edit", wc.EditMovieForm)
 	router.GET("/loans/:id/edit", wc.EditLoanForm)
 
-	router.GET("/users/search", wc.ServeLoans)
-	router.GET("/movies/search", wc.ServeLoans)
-	router.GET("/loan/search", wc.ServeLoans)
+	router.GET("/users/search", wc.SearchUsers)
+	router.GET("/movies/search", wc.SearchMovies)
+	router.GET("/loan/search", wc.SearchLoans)
 
 	router.POST("/users", wc.CreateUser)
 	router.POST("/users/:id/edit", wc.UpdateUser)
@@ -215,7 +214,7 @@ func (wc *WebController) CreateMovie(c *gin.Context) {
 
 	wc.addFlashMessage(c, "Movie created successfully", "success")
 
-	c.Redirect(http.StatusSeeOther, "/users")
+	c.Redirect(http.StatusSeeOther, "/movies")
 }
 
 func (wc *WebController) CreateLoan(c *gin.Context) {
@@ -236,7 +235,7 @@ func (wc *WebController) CreateLoan(c *gin.Context) {
 
 	wc.addFlashMessage(c, "Loan created successfully", "success")
 
-	c.Redirect(http.StatusSeeOther, "/users")
+	c.Redirect(http.StatusSeeOther, "/loans")
 }
 
 func (wc *WebController) EditUserForm(c *gin.Context) {
@@ -314,7 +313,7 @@ func (wc *WebController) EditLoanForm(c *gin.Context) {
 	loan, err := wc.loanService.GetLoan(loanId)
 	if err != nil {
 		wc.addFlashMessage(c, "Loan not found", "error")
-		c.Redirect(http.StatusSeeOther, "/Loan")
+		c.Redirect(http.StatusSeeOther, "/loans")
 		return
 	}
 
@@ -346,7 +345,7 @@ func (wc *WebController) UpdateUser(c *gin.Context) {
 	user, err := wc.userService.GetUser(userId)
 	if err != nil {
 		wc.addFlashMessage(c, "User not found", "error")
-		c.Redirect(http.StatusSeeOther, "/user")
+		c.Redirect(http.StatusSeeOther, "/users")
 		return
 	}
 
@@ -394,7 +393,6 @@ func (wc *WebController) UpdateMovie(c *gin.Context) {
 
 	quantity, err := strconv.ParseInt(c.PostForm("quantity"), 10, 64)
 	if err != nil {
-		fmt.Printf("quantity type: %v", quantity)
 		wc.addFlashMessage(c, "Error parsing quantity", "error")
 	}
 
@@ -611,6 +609,7 @@ func (wc *WebController) DeleteMovie(c *gin.Context) {
 	}
 
 	wc.addFlashMessage(c, "Movie deleted successfully", "success")
+	c.Redirect(http.StatusSeeOther, "/movies")
 }
 
 func (wc *WebController) addFlashMessage(c *gin.Context, message, messageType string) {

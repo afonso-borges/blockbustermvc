@@ -42,7 +42,7 @@
             <p><strong>Movie ID:</strong> {{.MovieID}}</p>
             <p><strong>User ID:</strong> {{.UserID}}</p>
             <p><strong>Borrowed at:</strong> {{.BorrowedAt.Format "02/01/2006 15:04"}}</p>
-            {{if .ReturnedAt}}
+            {{if and .ReturnedAt (eq .Status "returned")}}
             <p><strong>Returned at:</strong> {{.ReturnedAt.Format "02/01/2006 15:04"}}</p>
             {{end}}
             <div class="actions">
