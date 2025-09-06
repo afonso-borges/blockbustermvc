@@ -593,6 +593,7 @@ func (wc *WebController) DeleteUser(c *gin.Context) {
 	}
 
 	wc.addFlashMessage(c, "User deleted successfully", "success")
+	c.Redirect(http.StatusSeeOther, "/users")
 }
 
 func (wc *WebController) DeleteMovie(c *gin.Context) {
