@@ -54,7 +54,7 @@
             </div>
             <p><strong>Movie:</strong>
                 {{if index $.MoviesMap .MovieID}}
-                {{(index $.MovieMap .MovieID).Name}} por {{(index $.MovieMap .MovieID).Director}}
+                {{(index $.MovieMap .MovieID).Name}} by {{(index $.MovieMap .MovieID).Director}}
                 {{else}}
                 Movie ID: {{.MovieID}} (not found)
                 {{end}}
