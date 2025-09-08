@@ -41,7 +41,7 @@ Each module implements the repository pattern with:
 - **Gin Framework** - HTTP web framework with middleware support
 - **PostgreSQL** - Primary database with ACID compliance
 - **pgx/v5** - High-performance PostgreSQL driver
-- **golang-migrate** - Database schema versioning
+- **tern** - Database schema versioning
 - **UUID** - Unique identifier generation
 - **CORS** - Cross-origin resource sharing support
 - **godotenv** - Environment variable management
